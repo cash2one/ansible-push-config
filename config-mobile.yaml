@@ -1,0 +1,7 @@
+- hosts: user-mobile
+  remote_user: evans
+  tasks:
+    - name: Ensure user-mobile config sync
+      synchronize: src=/home/www/userops/user-mobile-config/ dest=/home/www/config/
+    - name: restart other nginx
+      service: name=nginx state=reloaded
