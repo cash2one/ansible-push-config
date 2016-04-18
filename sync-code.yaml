@@ -1,0 +1,16 @@
+# 发布代码脚本 new-create-version.sh调用
+- hosts: '{{ hosts }}'
+  tasks:  
+    #判断对应服务器临时目录是否存在
+    - name: ensure {{ temp }} created
+      file: path={{ temp }} owner=work group=work state=directory mode=0755
+    #判断对应服务器代码目录是否存在
+    - name: ensure {{ dir }} created
+      file: path={{ dir }} owner=work group=work state=directory mode=0755
+    #同步本机代码至对应服务器temp目录
+    - synchronize:
+          src: '{{ src }}'
+          dest: '{{ temp }}' 
+          delete: yes
+    #对应服务器rsync代码至指定版本
+    - command: rsync --delete-after -a  '{{temp}}' '{{ to }}'
